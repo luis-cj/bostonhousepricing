@@ -64,8 +64,20 @@ def predict_api():
     # Make sure you're code is correct, otherwise you'll get plenty of errors from the POST action.
     # I had an error writing the reshape part...
 
+# Now we need to deploy this!
+# Instead of creating the prediction in the form of an API, why not create a small web application
 
+# Let's create the html page that allows us to input the data from there
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = [float(x) for x in request.form.values()]
+    final_input = scaler.transform(np.array(data).reshape(1,-1))
+    print(final_input)
 
+    output = regmodel.predict(final_input)[0]
+    print(output)
+    # the return will be a rendered template with the prediction text we want
+    return render_template("home.html",prediction_text = "The House price prediction is {}".format(output))
 # in order to run this
 if __name__ == "__main__":
     app.run(debug = True)
